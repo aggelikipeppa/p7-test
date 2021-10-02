@@ -25,7 +25,6 @@ router.get('/byuserId/:id', async (req, res) => {
   res.json(listOfPosts);
 }); 
 
-
 router.post("/", validateToken, async (req, res) => { //on met async/await pour etre sure que c'est entrer dans le database
     const post = req.body;
     post.username = req.user.username;
@@ -33,23 +32,20 @@ router.post("/", validateToken, async (req, res) => { //on met async/await pour 
     await Posts.create(post);      //Je crée un post comme le model que j'ai crée dans le dossier models/Posts
     res.json(post);
 });
-//imageUrl: `/images/${req.file.filename}`,//
 
-//pour faire des modifications sur le titre du text
 router.put("/title", validateToken, async (req, res) => { 
   const { newTitle, id } = req.body;
   await Posts.update({title: newTitle}, {where: { id: id }})     
   res.json(newTitle);
 });
 
-//pour faire des modifications sur le text du post
 router.put("/postText", validateToken, async (req, res) => { 
   const { newText, id } = req.body;
   await Posts.update({postText: newText}, {where: { id: id }})     
   res.json(newText);
 });
 
-//pour supprimer un post
+
 router.delete("/:postId", validateToken, async (req, res) => {
   const postId = req.params.postId;
   await Posts.destroy({
