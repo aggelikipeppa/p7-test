@@ -19,6 +19,7 @@ import EventBus from "./common/EventBus";
 
 import React from "react";
 import { logout } from "./actions/auth";
+import Report from "./pages/report";
 
 
 class App extends React.Component {
@@ -57,6 +58,9 @@ class App extends React.Component {
           </Route>
           <Route path="/profile">
             <Profile />
+          </Route>
+          <Route path="/report-posts">
+            <Report />
           </Route>
           <Route exact path={["/", "/home"]}>
             <Home />

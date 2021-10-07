@@ -6,15 +6,7 @@ import {API_URL} from "../constants"
 
 class AuthService {
     login(email, password){
-        return axios
-          .post(API_URL + "auth/login", { email, password })
-          .then((response) => {
-            if (response.data.token) {
-              localStorage.setItem("GROUPOMANIA_USER", JSON.stringify(response.data));
-            }
-    
-            return response.data; 
-        });
+        return axios.post(API_URL + "auth/login", { email, password })
     }
     
     logout() {

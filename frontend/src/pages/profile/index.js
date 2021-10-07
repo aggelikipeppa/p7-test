@@ -9,11 +9,14 @@ import Layout from '../../layout'
 import anonymuser from '../../assets/anonymous.png'
 import eventBus from '../../common/EventBus';
 import { changePassword, uploadePicture } from '../../actions/user';
+import { API_URL } from '../../constants';
+import { clearMessage } from '../../actions/message';
 
 
 class Profile extends Component {
     constructor(props){
         super(props);
+        props.dispatch(clearMessage());
         this.state ={
             oldPassword:"",
             newPassword:"",
@@ -38,12 +41,13 @@ class Profile extends Component {
             this.setState({
                 oldPassword:"",
                 newPassword:"",
+                description:""
             })
         })
         .catch((error) => {
-            // if (error.response && error.response.status === 401) {
-            //     eventBus.dispatch("logout");
-            // }
+            if (error && error.response && error.response.status === 401) {
+                eventBus.dispatch("logout");
+            }
             console.log(error)
         })
         .finally(() => {
@@ -89,8 +93,6 @@ class Profile extends Component {
         .dispatch(uploadePicture(file))
         .then((response)=>{
             // tout c'est bien passe
-            // console.log(response)
-            // this.setState({posts:response})
         })
         .finally(()=>this.setState({imageUploading:false}))
         .catch((error) => {
@@ -106,10 +108,9 @@ class Profile extends Component {
         const {message,isLoggedIn} = this.props ;
         const username = this.props.user?.username ;
         const email = this.props.user?.email ;
-        const profile_picture = this.state?.profile_picture;
-        const {loading,oldPassword,newPassword,imageUploading} = this.state ;
-
-
+        const profile_picture = this.props.user?.profile_picture;
+        const {loading,oldPassword,newPassword,imageUploading,description} = this.state ;
+        
         if (!isLoggedIn) {
             return <Redirect to="/login" />;
         }
@@ -119,7 +120,7 @@ class Profile extends Component {
                 <section className="profile">
                     <div className="profile--picture">
                         <img 
-                            src={profile_picture ? profile_picture : anonymuser} 
+                            src={profile_picture ? `${API_URL}${profile_picture}` : anonymuser} 
                             ref={img => this.img = img} onError={ () => this.img.src = anonymuser} 
                             alt={`Photo de profil de `+username} />
                         <form>
@@ -143,6 +144,24 @@ class Profile extends Component {
                             <p className="profile--username"><span className="input-title">Username</span> :&nbsp; {username}</p>
                             <p className="profile--email"><span className="input-title">Email</span> : &nbsp; {email}</p>
                         </div>
+                        <hr />
+                        <h2>À propos de moi</h2>
+                        <div className="errors--message">
+                           {/* {message} */}
+                        </div>
+                        {/* rendre fonctionnel ce formulaire */}
+                        <form  className="form-description" onSubmit={this.handleChangePassword}>
+                            <label htmlFor="user-description">
+                                <textarea name="description" value={description} onChange={this.handleChange} />
+                            </label>
+                            {!loading ?
+                            (
+                                <button class="btn" type="submit">Enregistrer</button>
+                            ):
+                            (
+                                <button class="btn" disabled type="submit"><i class="fa fa-spinner fa-spin"></i> Loading</button>
+                            )}
+                        </form>
                         <hr />
                         <h2>Changer de mot de passe</h2>
                         <div className="errors--message">

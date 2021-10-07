@@ -118,3 +118,10 @@
   font-weight: bold;
   color: $color-like-neutral;
 }
+.form-description {
+  textarea {
+    width: -webkit-fill-available;
+    height: 130px;
+    padding: 10px;
+  }
+}

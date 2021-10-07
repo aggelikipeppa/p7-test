@@ -18,9 +18,6 @@ class UserService{
         return axios.put(API_URL + 'posts',formData, { headers: authHeader() });
     }
 
-    uploadPicture(formData){
-
-    }
     deleteAccount(){
 
     }

@@ -6,13 +6,11 @@ import validator from 'validator'
 import "./index.scss"
 
 import Layout from '../../layout'
-import anonymousUser from '../../assets/anonymous.png'
-import publicationPicture from '../../assets/publication.jpg'
 import CreatePostComponent from "../../components/post"
-import { commentPost, getAllPosts } from '../../actions/posts';
 import PostItem from '../../components/postItem';
+import { getAllReportedPosts } from '../../actions/posts';
 
-class Home extends React.Component{
+class Report extends React.Component{
     constructor(props){
         super(props) ;
         this.state ={
@@ -22,7 +20,7 @@ class Home extends React.Component{
     componentDidMount(){
         // on fetch tous les posts 
         this.props
-        .dispatch(getAllPosts())
+        .dispatch(getAllReportedPosts())
         .then((response)=>{
             // console.log(response)
             // this.setState({posts:response})
@@ -48,9 +46,7 @@ class Home extends React.Component{
         return (
             <Layout>
                 <div className="publications">
-                    <h1>Dernières publications</h1>
-                    {/* AJOUT D'UNE PUBLICATION */}
-                    <CreatePostComponent />
+                    <h1>Liste des publications signalées</h1>
                     {/* LISTE DES DERNIERES PUBLICATIONS  */}
                     <section className="publications--list">
                         {postsLoading ?(
@@ -73,7 +69,7 @@ class Home extends React.Component{
 function mapStateToProps(state) {
     const { isLoggedIn, user } = state.auth;
     const { message } = state.message;
-    const {allPosts:posts} = state.posts ;
+    const {reportedPosts:posts} = state.posts ;
     return {
       isLoggedIn,
       message,
@@ -82,4 +78,4 @@ function mapStateToProps(state) {
     };
 }
   
-export default connect(mapStateToProps)(Home);
+export default connect(mapStateToProps)(Report);

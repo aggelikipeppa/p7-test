@@ -13,8 +13,34 @@ class PostService{
         return axios.post(API_URL + 'posts',formData, { headers: authHeader() });
     }
 
+    deletePost(postId){
+        return axios.delete(API_URL + `posts/${postId}`,{ headers: authHeader() });
+    }
+
+    reportPost(postId){
+        return axios.get(API_URL + `posts/report/${postId}`,{ headers: authHeader() });
+    }
+
     gettAllPosts(){
         return axios.get(API_URL + 'posts', { headers: authHeader() });
+    }
+
+    gettAllReportedPosts(){
+        return axios.get(API_URL + 'posts/reported', { headers: authHeader() });
+    }
+
+    
+
+    likePost(postId,option){
+        return axios.post(API_URL + `posts/like/${postId}`,{option}, { headers: authHeader() });
+    }
+
+    commentPost(postId,content){
+        return axios.post(API_URL + `comments`,{post_id:postId,content}, { headers: authHeader() });
+    }
+
+    deleteComment(commentId){
+        return axios.delete(API_URL + `comments/${commentId}`,{ headers: authHeader() });
     }
 }
 

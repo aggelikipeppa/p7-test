@@ -4,6 +4,10 @@ import {
     LOGIN_SUCCESS,
     LOGIN_FAIL,
     LOGOUT,
+    UPLOAD_PROFILE_PICTURE_SUCCESS,
+    CHANGE_PASSWORD_FAIL,
+    CHANGE_PASSWORD_SUCCESS,
+    UPLOAD_PROFILE_PICTURE_FAIL,
 } from "../actions/types";
   
 const user = JSON.parse(localStorage.getItem("GROUPOMANIA_USER"));
@@ -44,6 +48,25 @@ export default function (state = initialState, action) {
           isLoggedIn: false,
           user: null,
         };
+      case CHANGE_PASSWORD_SUCCESS:
+            return {
+              ...state,
+            };
+      case CHANGE_PASSWORD_FAIL:
+            return {
+              ...state
+            };
+      case UPLOAD_PROFILE_PICTURE_SUCCESS:
+            //  le state contient l'anccien photo , on update cela  
+            state.user.profile_picture = payload
+            localStorage.setItem("GROUPOMANIA_USER", JSON.stringify(state.user));
+            return {
+                  ...state
+            };
+      case UPLOAD_PROFILE_PICTURE_FAIL:
+            return {
+                  ...state
+                };
       default:
         return state;
     }

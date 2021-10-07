@@ -41,7 +41,7 @@ class Post extends React.Component {
             this.setState({loading:false})
         })
         .catch((error) => {
-            if (error.response && error.response.status === 401) {
+            if (error && error.response && error.response.status === 401) {
                 eventBus.dispatch("logout");
             }
             // console.log(error)
