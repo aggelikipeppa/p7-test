@@ -13,7 +13,6 @@ const db = require('./models');
 const postRouter = require('./routes/Posts');
 const commentsRouter = require('./routes/Comments');
 const usersRouter = require('./routes/Users');
-const likesRouter = require("./routes/Likes");
 
 //Connection à la base de données
 db.sequelize
@@ -48,10 +47,9 @@ app.use(helmet());
   
   
   
-  app.use("/posts", postRouter);
-  app.use("/comments", commentsRouter);
-  app.use("/auth", usersRouter);
-  app.use("/likes", likesRouter);
+app.use("/posts", postRouter);
+app.use("/comments", commentsRouter);
+app.use("/auth", usersRouter);
 
 module.exports = app;
 

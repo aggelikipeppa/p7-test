@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { Comments } = require("../models");
+const { Comments,Users } = require("../models");
 const { validateToken } = require('../middlewares/auth');
 
 //Pour récupérer le postId
@@ -13,23 +13,37 @@ router.get("/:postId", async (req, res) => {
 //Pour créer les comments
 router.post("/", validateToken, async (req, res) => {
   const comment = req.body;
-  const username = req.user.username;
-  comment.username = username;
-  await Comments.create(comment);
-  res.json(comment);
+  // console.log(comment) ;
+  comment.user_id = req.user.id;
+  saving = await Comments.create(comment);
+  comment_save = await Comments.findByPk(saving.id,{
+    include:[
+      {
+        model: Users,
+        as:'author',
+        attributes: ['id','username','profile_picture']
+      }
+    ]
+  })
+  res.status(201).json({message:"commentaire poster", comment:comment_save});
 });
 
 //Pour supprimer un commentaire
 router.delete("/:commentId", validateToken, async (req, res) => {
   const commentId = req.params.commentId;
-
-  await Comments.destroy({
-    where: {
-      id: commentId,
-    },
-  });
-
-  res.json("DELETED SUCCESSFULLY");
+  try{
+    comment_destroy = await Comments.destroy({
+      where: {
+        id: commentId,
+      },
+    });
+    // console.log(comment_destroy)
+    res.json({message:"commentaire supprimer",comment:comment_destroy});
+  }catch(error){
+    console.log(error)
+    res.status(500).json({ message: "une erreur est survenue , essayez plus tard" });
+  }
 });
+
 
 module.exports = router;

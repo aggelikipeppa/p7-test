@@ -40,15 +40,15 @@ router.post("/register", async (req, res) => {
     return  res.status(400).json({ message:"une erreur est survenue", errors:errors  });
   }
 
-
-  bcrypt.hash(password, 10).then((hash) => {
-    Users.create({
-      username: username,
-      password: hash,
-      email: email,
-    });
+  try{
+    let hash = await bcrypt.hash(password, 10) ;
+    await Users.create({username: username,password: hash,email: email,});
     res.status(201).json({message:"creation compte reuissi , connectez vous des maintenant"});
-  });
+    
+  }catch(error){
+    console.log(error)
+    res.status(500).json({ message: "une erreur est survenue , essayez plus tard" });
+  }
 });
 
 
@@ -70,7 +70,7 @@ router.post("/login", async (req, res) => {
         { username: user.username, id: user.id, email: user.email,profile_picture:user.profile_picture },
         process.env.JWT_SECRET
       );
-      res.json({token: accessToken,username: user.username,email: user.email,profile_picture:user.profile_picture}); 
+      res.json({token: accessToken,username: user.username,id: user.id,email: user.email,profile_picture:user.profile_picture,description:user.description}); 
     } 
 
     res.status(400).json({ error: "email ou mot passe incorrect" });
@@ -113,7 +113,7 @@ router.put('/changepassword', validateToken, async (req, res) => {
     if (match){
       let hash = await bcrypt.hash(newPassword, 10) ;
       await Users.update({password: hash}, { where: { id: req.user.id } }) ;
-      return res.json({message:"mot passe changer avec succes"});
+      return res.json({message:"mot passe changer avec succes "});
     }
     res.status(400).json({ message: "mot passe pas correct , veuillez renseignez votre anccien mot de passe" });
   }catch(error){

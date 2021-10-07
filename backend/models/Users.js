@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique:true // email doit etre unique
     },
+    description: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue:null
+    },
     profile_picture: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -22,13 +27,11 @@ module.exports = (sequelize, DataTypes) => {
 
 //On associe les users avec les likes et les Posts
   Users.associate = (models) => {
-    Users.hasMany(models.Likes, {
+    
+    Users.hasMany(models.Posts, {
       onDelete: "cascade",
+      as: "posts"
     });
-
-    // Users.hasMany(models.Posts, {
-    //   onDelete: "cascade",
-    // });
   };
 
   return Users;

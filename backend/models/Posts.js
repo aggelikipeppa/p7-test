@@ -12,10 +12,21 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: true,
       },
-    });
+      // contient l'id des utilisateurs qui like
+      usersLikes: {
+        type: DataTypes.STRING,
+        allowNull: false 
+      },
+      // permet la moderation communication
+      postNotice:{
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+        defaultValue:false 
+      },
+  });
   
-    //Pour faire la liaison entre les posts et les comments
-    Posts.associate = (models) => {
+  //Pour faire la liaison entre les posts et les comments
+  Posts.associate = (models) => {
       //Pour faire la liaison entre les posts et les Users
       Posts.belongsTo(models.Users,{
         onDelete:"cascade",
@@ -24,14 +35,10 @@ module.exports = (sequelize, DataTypes) => {
       }) ;
       Posts.hasMany(models.Comments, {
         onDelete: "cascade",  //Si je supprime un post les comments aussi seront supprimer
+        foreignKey:"post_id",
         as:"comments"
       });
-      // //Pour faire la liaison entre les posts et les Likes
-      Posts.hasMany(models.Likes, {
-          onDelete: "cascade",
-          as:"likes"
-      });
-  };
+    };
 
   return Posts;
 };
