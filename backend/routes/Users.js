@@ -70,7 +70,7 @@ router.post("/login", async (req, res) => {
         { username: user.username, id: user.id, email: user.email,profile_picture:user.profile_picture },
         process.env.JWT_SECRET
       );
-      res.json({token: accessToken,username: user.username,id: user.id,email: user.email,profile_picture:user.profile_picture,description:user.description}); 
+      res.json({token: accessToken,username: user.username,id: user.id,email: user.email,profile_picture:user.profile_picture,description:user.description,isAdmin:user.isAdmin}); 
     } 
 
     res.status(400).json({ error: "email ou mot passe incorrect" });
@@ -99,7 +99,7 @@ router.get("/basicinfo/:id", async (req, res) => {
     attributes: { exclude: ["password"] },  //J'exclue le password par les info que je veux recevoir
   });
 
-  res.json(basicInfo);
+  res.json({user:basicInfo});
 });
 
 //Pour changer le mot de passe 
@@ -123,6 +123,7 @@ router.put('/changepassword', validateToken, async (req, res) => {
 
 });
 
+
 router.post('/upload-picture',[validateToken,multer], async (req,res)=>{
    console.log(req.user) ;
    let picture =  `images/${req.file.filename}`;
@@ -138,7 +139,24 @@ router.post('/upload-picture',[validateToken,multer], async (req,res)=>{
 
 })
 
+router.put("/update-description", validateToken, async (req, res) => { 
+  const { description } = req.body;
+  await Users.update({description}, {where: { id: req.user.id }}) ;    
+  res.json({message:"mise a jour effectuer"});
+});
 
+
+// supprimer un post
+router.delete("/user", validateToken, async (req, res) => {
+  const userId = req.user.id;
+  await Users.destroy({
+    where: {
+      id: userId,
+    },
+  });
+
+  res.json({message:"compte supprimer avec succes"});
+});
 
 
 module.exports = router;

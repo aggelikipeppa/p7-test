@@ -48,6 +48,8 @@ class Post extends React.Component {
         })
     }
 
+    
+
     onImageChange = (event) => {
         if (event.target.files && event.target.files[0]) {
           this.setState({

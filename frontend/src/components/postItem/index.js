@@ -9,6 +9,7 @@ import anonymuser from '../../assets/anonymous.png'
 import "./index.scss";
 import eventBus from '../../common/EventBus';
 import { commentPost, deleteComment, likeOrUnLikePost,deleteCurrentPost, reportCurrentPost } from '../../actions/posts';
+import { Link } from 'react-router-dom';
 
 class PostItem extends Component {
 
@@ -176,7 +177,7 @@ class PostItem extends Component {
                         </div>
                         <div className="text">
                             <p className="name">
-                                <a>{post.author.username}</a>
+                                <Link to={`/user/profile/${post.author.id}`} >{post.author.username}</Link>
                             </p>
                             <p className="date"> Publié le {moment(post.createdAt).format("DD-MM-YYYY")} à {moment(post.createdAt).format("HH:mm")} </p>
                         </div>
@@ -184,7 +185,9 @@ class PostItem extends Component {
                             <span  onClick={this.handleMoreOption} aria-label="Supprimer la publication"><i className="fas fa-ellipsis-v"></i></span>
                             <div ref={(current)=>this.current=current}  className={`more-option-list`}>
                                 <button type="button" ref={(button)=>this.button=button} onClick={this.handleReportPost}> <i class="fas fa-comment-slash"></i> Signaler</button>
-                                <button type="button" ref={(button)=>this.button=button} onClick={this.handleDeletePost} > <i className="fas fa-trash"></i> Supprimer</button>
+                                {(post.author.id==user.id || user.isAdmin) && (
+                                    <button type="button" ref={(button)=>this.button=button} onClick={this.handleDeletePost} > <i className="fas fa-trash"></i> Supprimer</button>
+                                )}
                             </div>
                         </div>
                     </header>
@@ -218,7 +221,9 @@ class PostItem extends Component {
                                         </div>
                                         <div className="comments--comment--fluid">
                                             <p class="title">
-                                                <span>{comment.author.username}</span> &nbsp;&nbsp;
+                                                <Link 
+                                                    to={`/user/profile/${comment.author.id}`}
+                                                ><span>{comment.author.username}</span></Link> &nbsp;&nbsp;
                                                 {moment(comment.createdAt).format("DD-MM-YYYY")} à {moment(comment.createdAt).format("HH:mm")}
                                             </p>
                                             <p>{comment.content}</p>

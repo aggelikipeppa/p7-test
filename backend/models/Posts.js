@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       // permet la moderation communication
       postNotice:{
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        allowNull: false,
         defaultValue:false 
       },
   });

@@ -8,6 +8,8 @@ import {
     CHANGE_PASSWORD_FAIL,
     CHANGE_PASSWORD_SUCCESS,
     UPLOAD_PROFILE_PICTURE_FAIL,
+    SET_USER_DESCRIPTION_FAIL,
+    SET_USER_DESCRIPTION_SUCCESS,
 } from "../actions/types";
   
 const user = JSON.parse(localStorage.getItem("GROUPOMANIA_USER"));
@@ -49,6 +51,8 @@ export default function (state = initialState, action) {
           user: null,
         };
       case CHANGE_PASSWORD_SUCCESS:
+      case SET_USER_DESCRIPTION_SUCCESS:
+      case SET_USER_DESCRIPTION_FAIL:
             return {
               ...state,
             };
@@ -63,6 +67,13 @@ export default function (state = initialState, action) {
             return {
                   ...state
             };
+      case SET_USER_DESCRIPTION_SUCCESS:
+          //  le state contient l'anccien description , on update cela  
+          state.user.description = payload
+          localStorage.setItem("GROUPOMANIA_USER", JSON.stringify(state.user));
+          return {
+              ...state
+          };
       case UPLOAD_PROFILE_PICTURE_FAIL:
             return {
                   ...state

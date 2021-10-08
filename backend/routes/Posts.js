@@ -79,6 +79,8 @@ router.get("/reported", validateToken, async (req, res) => {
   
   res.json({ posts: listOfPosts});
 });
+
+
 // recherche d'un post
 router.get('/byId/:id', async (req, res) => {
    const postId = req.params.id 
@@ -139,7 +141,7 @@ router.get('/byuserId/:id', async (req, res) => {
       ['createdAt','DESC']
     ],
   });
-  res.json(listOfPosts);
+  res.json({posts:listOfPosts});
 }); 
 
 // creation d'un post

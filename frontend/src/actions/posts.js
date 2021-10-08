@@ -91,6 +91,17 @@ export const getAllPosts = () => (dispatch)=>{
 }
 
 
+export const getAllPostsByUser = (userId)=>(dispatch)=>{
+  return PostService.getPostsByUserId(userId).then(
+      (response)=>{
+          return Promise.resolve(response.data);
+      },
+      (error)=>{
+          return Promise.reject(error);
+      }
+  )
+}
+
 
 export const getAllReportedPosts = () => (dispatch)=>{
   return PostService.gettAllReportedPosts().then(

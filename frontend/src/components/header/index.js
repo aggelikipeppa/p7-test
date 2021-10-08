@@ -30,11 +30,13 @@ function Header(props) {
                 ? (
                     // Si l'utilisateur est loggé
                     <nav  className="header--nav">
-                        <Link to="/report-posts">
-                            <div className="moderation">
-                                <i class="fas fa-comment-slash"></i> Posts Signaler
-                            </div>
-                        </Link>
+                        {props.user.isAdmin && (
+                            <Link to="/report-posts">
+                                <div className="moderation">
+                                    <i class="fas fa-comment-slash"></i> Posts Signaler
+                                </div>
+                            </Link>
+                        )}
                         <Link to="/profile">
                             <div className="header--nav--profile" title={"profil de "+username}>
                                 <img src={props.user?.profile_picture ? `${API_URL}${props.user?.profile_picture}` : anonymuser} alt={"Photo de profil"+username} />

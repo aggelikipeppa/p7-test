@@ -1,10 +1,17 @@
 import { combineReducers } from "redux";
+import { connectRouter } from 'connected-react-router'
+
 import auth from "./auth";
 import message from "./message";
 import posts from "./posts" ;
 
-export default combineReducers({
+
+const createRootReducer = (history) => combineReducers({
   auth,
   message,
-  posts
+  posts,
+  router: connectRouter(history),
 });
+
+
+export default createRootReducer ;

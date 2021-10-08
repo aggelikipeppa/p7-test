@@ -25,6 +25,10 @@ class PostService{
         return axios.get(API_URL + 'posts', { headers: authHeader() });
     }
 
+    getPostsByUserId(userId){
+        return axios.get(API_URL + `posts/byuserId/${userId}`, { headers: authHeader() });
+    }
+
     gettAllReportedPosts(){
         return axios.get(API_URL + 'posts/reported', { headers: authHeader() });
     }

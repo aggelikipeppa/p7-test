@@ -11,6 +11,15 @@ class UserService{
     changePassword(oldPassword,newPassword){
         return axios.put(API_URL + 'auth/changepassword',{oldPassword,newPassword}, { headers: authHeader() });
     }
+
+    updateAboutMe(description){
+        return axios.put(API_URL + 'auth/update-description',{description}, { headers: authHeader() });
+    }
+
+    getUserBasicInformation(userId){
+        return axios.get(API_URL + `auth/basicinfo/${userId}`, { headers: authHeader() });
+    }
+
     postMessage(content,file){
         let formData = new FormData();
         formData.append('image', file);
@@ -19,8 +28,9 @@ class UserService{
     }
 
     deleteAccount(){
-
+        return axios.delete(API_URL + `auth/user`, { headers: authHeader() });
     }
+    
     refreshUserLocalData(){
         const user = JSON.parse(localStorage.getItem("GROUPOMANIA_USER"));
         if(!user.token){

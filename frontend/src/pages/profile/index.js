@@ -8,9 +8,10 @@ import "./index.scss"
 import Layout from '../../layout'
 import anonymuser from '../../assets/anonymous.png'
 import eventBus from '../../common/EventBus';
-import { changePassword, uploadePicture } from '../../actions/user';
+import { changePassword, deletMyAccount, setUserAboutMe, uploadePicture } from '../../actions/user';
 import { API_URL } from '../../constants';
 import { clearMessage } from '../../actions/message';
+import { logout } from '../../actions/auth';
 
 
 class Profile extends Component {
@@ -22,12 +23,12 @@ class Profile extends Component {
             newPassword:"",
             profile_picture:this.props.user?.profile_picture,
             loading:false,
-            imageUploading:false
+            imageUploading:false,
+            loadingAboutMe:false
 
         }
     }
 
-    
     handleChange = e=>{
         const {name,value} = e.target ;
         this.setState({[name]:value}) ;
@@ -73,7 +74,20 @@ class Profile extends Component {
     };
 
     handleDeleteAccount(){
-        
+        this.props
+        .dispatch(deletMyAccount())
+        .then((data)=>{
+            // logout now user
+            this.props
+            .dispatch(logout()) ;
+        })
+        .catch((error) => {
+            // une erreur
+            if (error.response && error.response.status === 401) {
+                eventBus.dispatch("logout");
+            }
+            console.log(error)
+        })
     }
 
     onImageChange = (event) => {
@@ -104,12 +118,33 @@ class Profile extends Component {
         })
     }
 
+    handleSaveABoutMe = e =>{
+        e.preventDefault() ;
+        console.log(this.state)
+        this.setState({loadingAboutMe:true}) ;
+        this.props
+        .dispatch(setUserAboutMe(this.state.description))
+        .then((response)=>{
+            // tout c'est bien passe
+        })
+        .finally(()=>this.setState({loadingAboutMe:false}))
+        .catch((error) => {
+            // une erreur
+            if (error.response && error.response.status === 401) {
+                eventBus.dispatch("logout");
+            }
+            console.log(error)
+        })
+    }
+
+
     render() {
         const {message,isLoggedIn} = this.props ;
         const username = this.props.user?.username ;
         const email = this.props.user?.email ;
         const profile_picture = this.props.user?.profile_picture;
-        const {loading,oldPassword,newPassword,imageUploading,description} = this.state ;
+        const description = this.props.user?.description;
+        const {loading,oldPassword,newPassword,imageUploading,loadingAboutMe} = this.state ;
         
         if (!isLoggedIn) {
             return <Redirect to="/login" />;
@@ -146,15 +181,12 @@ class Profile extends Component {
                         </div>
                         <hr />
                         <h2>À propos de moi</h2>
-                        <div className="errors--message">
-                           {/* {message} */}
-                        </div>
                         {/* rendre fonctionnel ce formulaire */}
-                        <form  className="form-description" onSubmit={this.handleChangePassword}>
+                        <form  className="form-description" onSubmit={this.handleSaveABoutMe}>
                             <label htmlFor="user-description">
-                                <textarea name="description" value={description} onChange={this.handleChange} />
+                                <textarea required name="description" value={description} onChange={this.handleChange} />
                             </label>
-                            {!loading ?
+                            {!loadingAboutMe ?
                             (
                                 <button class="btn" type="submit">Enregistrer</button>
                             ):

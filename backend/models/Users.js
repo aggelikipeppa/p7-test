@@ -23,6 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: true,
       default:null
     },
+    isAdmin:{
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue:false 
+    },
   });
 
 //On associe les users avec les likes et les Posts
